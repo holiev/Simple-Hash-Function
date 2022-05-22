@@ -1,0 +1,119 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+class Data
+{
+public:
+    int key;
+    string value;
+    Data(int key, string value)
+    {
+        this->key = key;
+        this->value = value;
+    }
+};
+
+class HashTable
+{
+private:
+    Data **arr;
+    int size;
+public:
+    HashTable(int size)
+    {
+        this->size = size;
+        arr = new Data* [size];
+        for(int i = 0; i < size; i++)
+        {
+            arr[i] = NULL;
+        }
+    }
+
+    int HashFunc(int key)
+    {
+        return key % size;
+    }
+
+
+    void Insert(int key, string value)
+    {
+        int hash = HashFunc(key);
+        while(arr[hash] != NULL && arr[hash]->key != key)
+        {
+            hash++;
+        }
+
+        if(arr[hash] != NULL)
+            delete arr[hash];
+
+        arr[hash] = new Data(key, value);
+    }
+
+    void Search(int key)
+    {
+        int hash = HashFunc(key);
+        
+        if(arr[hash] == NULL)
+            cout << "Not found" << endl;
+        else
+            cout << arr[hash]->value << endl;
+    }
+
+    void Remove(int key)
+    {
+        int hash = HashFunc(key);
+        
+        if(arr[hash] == NULL)
+        {
+            cout << "Not found" << endl;
+            return;
+        }
+        else
+        {
+            arr[hash] = NULL;
+        }
+        cout << "Deleted" << endl;
+    }
+};
+
+int main() {
+    int m;
+    cout<<"Enter size of hash table: "<<endl;
+    cin >> m;
+    HashTable Data(m);
+    
+    int k;
+    string v;
+    for(int i = 0; i < m; i++)
+    {
+        cout<<"Enter first key = ";
+        cin>>k;
+        cout<<"Write the value = ";
+        cin>>v;
+        Data.Insert(k, v);
+    }
+    cout<<"Enter key for getting result = ";
+    cin>>k;
+    Data.Search(k);
+    int variant;
+    cout<<"Do you want to remove infromation (1 - yes, 2 - no, stop the propgram): ";
+    cin>>variant;
+    switch (variant) {
+        case 2:
+            cout<<"Stop"<<endl;
+            return 0;
+            break;
+        case 1:
+            cout<<"Enter a key which you want to delete:"<<endl;
+            cin>>k;
+            Data.Remove(k);
+            break;
+        default:
+            cout<<"Error!"<<endl;
+            return -1;
+            break;
+    }
+    return 0;
+}
